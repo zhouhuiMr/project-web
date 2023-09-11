@@ -4,7 +4,7 @@
 一套简单的管理系统
 
 #### 软件架构
-![输入图片说明](https://www.ilvcode.cn/file/project-web/structure.png "在这里输入图片标题")
+![输入图片说明](https://www.stprgm.cn/file/project-web/structure.png"在这里输入图片标题")
 
 -   **操作系统 CentOS  7.8 64位** 
 -   **Redis 6.0.6** 
