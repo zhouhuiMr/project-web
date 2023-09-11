@@ -1,0 +1,78 @@
+{
+	"mappings": {
+		"properties": {
+			"contentType": {
+				"type": "text",
+				"fields": {
+					"keyword": {
+						"type": "keyword",
+						"ignore_above": 256
+					}
+				}
+			},
+			"createDate": {
+				"type": "date"
+			},
+			"createTime": {
+				"type": "date"
+			},
+			"createYear": {
+				"type": "short"
+			},
+			"httpStatus": {
+				"type": "integer"
+			},
+			"path": {
+				"type": "text",
+				"fields": {
+					"keyword": {
+						"type": "keyword",
+						"ignore_above": 256
+					}
+				}
+			},
+			"requestMethod": {
+				"type": "keyword"
+			},
+			"resultCode": {
+				"type": "keyword"
+			},
+			"resultMessage": {
+				"type": "text",
+				"fields": {
+					"keyword": {
+						"type": "keyword",
+						"ignore_above": 256
+					}
+				}
+			},
+			"serviceName": {
+				"type": "keyword"
+			},
+			"token": {
+				"type": "text",
+				"fields": {
+					"keyword": {
+						"type": "keyword",
+						"ignore_above": 256
+					}
+				}
+			},
+			"userCode": {
+				"type": "keyword"
+			},
+			"userId": {
+				"type": "long"
+			},
+			"userNickname": {
+				"type": "text",
+				"fields": {
+					"keyword": {
+						"type": "keyword",
+						"ignore_above": 256
+					}
+				}
+			}
+		}
+	}
+}

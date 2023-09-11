@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.web.common.authcode.ImageAuthCode,\
+com.web.spring.tool.SpringBeanUtil,\
+com.web.common.tool.SysDefaultAdmin

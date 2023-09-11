@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.user.mapper.WebRequestMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.user.entity.WebRequestEntity">
+        <id column="request_id" property="requestId" />
+        <result column="menu_id" property="menuId" />
+        <result column="request_url" property="requestUrl" />
+        <result column="permission_name" property="permissionName" />
+        <result column="bt_describe" property="btDescribe" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+        
+        <result column="menu_name" property="menuName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        request_id, menu_id, request_url, permission_name, bt_describe, del_flag, create_user_id, create_time, update_user_id, update_time
+    </sql>
+    
+    <select id="getRequestList" resultMap="BaseResultMap">
+    	SELECT a.request_id,a.menu_id,a.request_url,
+    	a.permission_name, a.bt_describe,
+    	b.menu_name
+    	FROM web_request a
+    	LEFT JOIN web_menu b ON a.menu_id = b.menu_id AND b.del_flag = 0
+    	WHERE a.del_flag = 0
+    	<if test="request.menuId != null">
+    		AND a.menu_id = #{request.menuId}
+    	</if>
+    	<if test="request.requestId != null">
+    		AND a.request_id = #{request.requestId}
+    	</if>
+    	<if test="request.requestUrl != null and request.requestUrl != ''">
+    		AND a.request_url LIKE #{request.requestUrl}
+    	</if>
+    	<if test="request.permissionName != null and request.permissionName != ''">
+    		AND a.permission_name LIKE #{request.permissionName}
+    	</if>
+    	<if test="request.btDescribe != null and request.btDescribe != ''">
+    		AND a.bt_describe LIKE #{request.btDescribe}
+    	</if>
+    	ORDER BY a.menu_id ASC,a.request_id ASC
+    </select>
+    
+    <!-- 根据登录用户获取所在页面中授权的接口信息 -->
+    <select id="getAuthorisedRequest" resultMap="BaseResultMap">
+    	SELECT c.request_id,c.permission_name
+		FROM web_user_role a 
+		LEFT JOIN web_role_request b ON a.role_id = b.role_id AND b.is_allow = 1
+		INNER JOIN web_request c ON b.request_id = c.request_id AND c.del_flag = 0 AND c.menu_id IN (
+			<foreach collection="menuList" item="item" separator=",">
+				#{item}
+			</foreach>
+		) 
+		WHERE a.del_flag = 0
+		AND a.user_id = #{userId}
+    </select>
+
+</mapper>

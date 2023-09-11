@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.mqtt.mapper.IotDeviceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.iot.mqtt.IotDeviceEntity">
+        <id column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="device_key" property="deviceKey" />
+        <result column="device_secret" property="deviceSecret" />
+        <result column="device_status" property="deviceStatus" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+        
+        <result column="deviceStatusName" property="deviceStatusName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        device_id, device_name, device_key, device_secret, device_status, del_flag, create_user_id, create_time, update_user_id, update_time
+    </sql>
+
+	<!-- 分页获取设备列表 -->
+	<select id="getDeviceList" resultMap="BaseResultMap">
+		SELECT a.*,
+		b.label deviceStatusName
+		FROM iot_device a
+		LEFT JOIN basic_sys_dict b ON b.type = 'device_status' AND a.device_status = b.value AND b.del_flag = 0
+		WHERE a.del_flag = 0
+		<if test="condition.deviceName != null and condition.deviceName != ''">
+			AND a.device_name LIKE #{condition.deviceName}
+		</if>
+	</select>
+	
+	<!-- 根据消息主题的名称获取所有对应的设备 -->
+	<select id="getDeviceByTopic" resultType="com.web.common.iot.mqtt.IotDevice">
+		SELECT a.device_id deviceId,
+		a.device_name deviceName
+		FROM iot_device a
+		LEFT JOIN iot_device_topic b ON a.device_id = b.device_id
+		LEFT JOIN iot_mqtt_topic c ON b.topic_id = c.topic_id
+		WHERE a.del_flag = 0
+		AND b.`status` = 0
+		AND c.del_flag = 0
+		<if test="condition.topicId != null">
+			AND c.topic_id = #{condition.topicId}
+		</if>
+		<if test="condition.topicName != null and condition.topicName != ''">
+			AND c.topic_name = #{condition.topicName}
+		</if>
+	</select>
+	
+	<!-- 根据设备名称获取消息主题 -->
+	<select id="getTopicByDevice" resultType="com.web.common.iot.mqtt.IotMqttTopic">
+		SELECT a.topic_id topicId, 
+		a.topic_qos topicQos,
+		a.topic_name topicName
+		FROM iot_mqtt_topic a
+		LEFT JOIN iot_device_topic b ON a.topic_id = b.topic_id
+		LEFT JOIN iot_device c ON b.device_id = c.device_id
+		WHERE a.del_flag = 0
+		AND b.`status` = 0
+		AND c.del_flag = 0
+		<if test="condition.deviceId != null">
+			AND c.device_id = #{condition.deviceId}
+		</if>
+		<if test="condition.deviceName != null and condition.deviceName != ''">
+			AND c.device_name = #{condition.deviceName}
+		</if>
+	</select>
+	
+	<!-- 根据设备信息获取所有的消息主题状态 -->
+	<select id="getAllTopicByDevice" resultType="com.web.common.iot.mqtt.IotDeviceTopicEntity">
+		SELECT a.topic_id topicId,
+		a.topic_name topicName,
+		a.topic_qos topicQos,
+		c.label topicQosName,
+		IFNULL(b.`status`,1) `status`
+		FROM iot_mqtt_topic a
+		LEFT JOIN iot_device_topic b ON a.topic_id = b.topic_id AND b.device_id = #{condition.deviceId}
+		LEFT JOIN basic_sys_dict c ON c.type = 'mqtt_qos' AND a.topic_qos = c.value AND c.del_flag = 0
+		WHERE a.del_flag = 0
+		ORDER BY a.topic_id ASC
+	</select>
+</mapper>

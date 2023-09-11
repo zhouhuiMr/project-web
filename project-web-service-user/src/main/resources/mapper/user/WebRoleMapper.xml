@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.user.mapper.WebRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.user.entity.WebRoleEntity">
+        <id column="role_id" property="roleId" />
+        <result column="role_name" property="roleName" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+        
+        <result column="user_id" property="userId"/>
+        <result column="user_code" property="userCode"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        role_id, role_name, del_flag, create_user_id, create_time, update_user_id, update_time
+    </sql>
+    
+    <!-- 根据查询条件，获取角色列表 -->
+    <select id="getRoleList" resultMap="BaseResultMap">
+    	SELECT * 
+    	FROM web_role
+    	WHERE del_flag = 0
+    	<if test="condition.roleId != null">
+    		AND role_id = #{condition.roleId}
+    	</if>
+    	<if test="condition.roleName != null and condition.roleName != ''">
+    		AND role_name LIKE #{condition.roleName}
+    	</if>
+    </select>
+    
+    <!-- 根据用户信息获取对应的角色列表 -->
+    <select id="getRolesByUser" resultMap="BaseResultMap">
+    	SELECT b.role_id, b.role_name, b.del_flag,
+    	c.user_id,c.code user_code
+    	FROM web_user_role a
+    	LEFT JOIN web_role b ON a.role_id = b.role_id
+    	LEFT JOIN web_user c ON a.user_id = c.user_id
+    	WHERE a.del_flag = 0
+    	AND b.del_flag = 0
+    	AND c.status = '1'
+    	AND a.user_id = #{user.userId}
+    </select>
+
+</mapper>

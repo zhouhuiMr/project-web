@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.user.mapper.WebUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.user.entity.WebUserEntity">
+        <id column="user_id" property="userId" />
+        <result column="code" property="code" />
+        <result column="password" property="password" />
+        <result column="tel" property="tel" />
+        <result column="mail" property="mail" />
+        <result column="nickname" property="nickname" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="district" property="district" />
+        <result column="birthday" property="birthday" />
+        <result column="icon" property="icon" />
+        <result column="user_type" property="userType" />
+        <result column="status" property="status" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+        
+        <result column="deptIds" property="deptIds"/>
+        <result column="deptNames" property="deptNames"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id, code, tel, mail, nickname, province, city, district, birthday, icon, user_type, status, create_user_id, create_time, update_user_id, update_time
+    </sql>
+    
+    <!-- 获取用户信息列表 -->
+    <select id="getUserList" resultMap="BaseResultMap">
+    	SELECT 
+    	a.user_id, a.code, 
+    	a.tel, a.mail, a.nickname, 
+    	a.province, a.city, a.district, 
+    	a.birthday, a.icon, a.user_type, 
+    	a.status,a.create_time,
+		GROUP_CONCAT(DISTINCT b.dept_id SEPARATOR ',') deptIds,
+		GROUP_CONCAT(DISTINCT c.dept_name SEPARATOR ',') deptNames
+    	FROM web_user a
+    	LEFT JOIN web_user_dept b ON a.user_id = b.user_id
+		LEFT JOIN web_dept c ON b.dept_id = c.dept_id AND c.del_flag = 0
+    	WHERE a.status IN (0,1)
+    	<if test="user.status != null and user.status != ''">
+    		AND a.status = #{user.status}
+    	</if>
+    	<if test="user.userType != null and user.userType != ''">
+    		AND a.user_type = #{user.userType}
+    	</if>
+    	<if test="user.code != null and user.code != ''">
+    		AND a.code LIKE #{user.code}
+    	</if>
+    	<if test="user.nickname != null and user.nickname != ''">
+    		AND a.nickname LIKE #{user.nickname}
+    	</if>
+    	GROUP BY a.user_id, a.code, 
+    	a.tel, a.mail, a.nickname, 
+    	a.province, a.city, a.district, 
+    	a.birthday, a.icon, a.user_type, 
+    	a.status,a.create_time
+    </select>
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>project-web-common</artifactId>
+  <packaging>pom</packaging>
+  <name>project-web-common</name>
+  <url>http://maven.apache.org</url>
+  
+  <parent>
+	<groupId>com</groupId>
+	<artifactId>project-web</artifactId>
+	<version>1.0.0</version>
+  </parent>
+  
+  <modules>
+  	<module>project-web-common-tool</module>
+  	<module>project-web-common-service</module>
+    <module>project-web-common-swagger</module>
+    <module>project-web-common-datasource</module>
+    <module>project-web-common-entity</module>
+    <module>project-web-common-api</module>
+  </modules>
+  
+	<dependencies>
+	
+	</dependencies>
+  
+  <build>
+    <finalName>project-web-common</finalName>
+  </build>
+</project>

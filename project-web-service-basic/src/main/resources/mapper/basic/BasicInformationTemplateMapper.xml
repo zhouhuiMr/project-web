@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.basic.mapper.InformationTemplateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.basic.info.entity.BasicInformationTemplateEntity">
+        <id column="template_id" property="templateId" />
+        <result column="template_type" property="templateType" />
+        <result column="template_code" property="templateCode" />
+        <result column="subject" property="subject" />
+        <result column="template_information" property="templateInformation" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="change_user_id" property="changeUserId" />
+        <result column="change_time" property="changeTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        template_id, template_type, template_code, subject, template_information, del_flag, create_user_id, create_time, change_user_id, change_time
+    </sql>
+
+</mapper>

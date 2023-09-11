@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.basic.mapper.BasicFileCatalogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.basic.catalog.entity.BasicFileCatalogEntity">
+        <id column="catalog_id" property="catalogId" />
+        <result column="catalog_name" property="catalogName" />
+        <result column="catalog_description" property="catalogDescription" />
+        <result column="auth_type" property="authType" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        catalog_id, catalog_name, catalog_description, auth_type, del_flag, create_user_id, create_time, update_user_id, update_time
+    </sql>
+    
+    <!-- 获取文件目录的列表 -->
+    <select id="getCatalogList" resultType="com.web.common.basic.catalog.entity.BasicFileCatalogEntity">
+    	SELECT * 
+    	FROM basic_file_catalog
+    	WHERE del_flag = 0
+    	ORDER BY parent_id ASC
+    </select>
+
+</mapper>

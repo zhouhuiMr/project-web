@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.quartz.mapper.QuartzJobExecLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.basic.quartz.entity.QuartzJobExecLogEntity">
+        <id column="log_id" property="logId" />
+        <result column="exec_id" property="execId" />
+        <result column="exec_period" property="execPeriod" />
+        <result column="exec_period_value" property="execPeriodValue" />
+        <result column="trigger_mode" property="triggerMode" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="exec_result" property="execResult" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        log_id, exec_id, exec_period, exec_period_value, trigger_mode, start_time, end_time, exec_result, create_time
+    </sql>
+
+</mapper>

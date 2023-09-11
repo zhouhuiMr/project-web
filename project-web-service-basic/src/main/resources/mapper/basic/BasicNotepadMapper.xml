@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.basic.mapper.BasicNotepadMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.basic.notepad.entity.BasicNotepadEntity">
+        <id column="note_id" property="noteId" />
+        <result column="title" property="title" />
+        <result column="type" property="type" />
+        <result column="note_message" property="noteMessage" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_date" property="createDate" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+        <result column="type_name" property="typeName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        note_id, title, type, note_message, del_flag, create_date, create_user_id, create_time, update_user_id, update_time
+    </sql>
+
+	<!-- 根据条件查询自己记录的事件列表 -->
+	<select id="getSelfNotepad" resultMap="BaseResultMap">
+		SELECT a.note_id,
+		a.title,a.type,
+		a.create_date,
+		a.create_time,
+		b.label type_name
+		FROM basic_notepad a
+		LEFT JOIN basic_sys_dict b ON a.type = b.value
+		AND b.type = 'notepad_type' AND b.del_flag = 0
+		WHERE a.del_flag = 0
+		AND a.create_user_id = #{condition.createUserId}
+		<if test="condition.type != null and condition.type != ''">
+			AND a.type = #{condition.type}
+		</if>
+		<if test="condition.startDate != null and condition.startDate != ''">
+			AND a.create_date &gt;= #{condition.startDate}
+		</if>
+		<if test="condition.endDate != null and condition.endDate != ''">
+			AND a.create_date &lt;= #{condition.endDate}
+		</if>
+	</select>
+	
+	<!-- 查询一定时间范围内，每日的消息数量 -->
+	<select id="getDailyNotepadOfMonth" resultType="java.util.Map">
+		SELECT create_date createDate,count(note_id) notepadRow
+		FROM basic_notepad
+		WHERE del_flag = 0
+		AND create_user_id = #{condition.createUserId}
+		<if test="condition.startDate != null and condition.startDate != ''">
+			AND create_date &gt;= #{condition.startDate}
+		</if>
+		<if test="condition.endDate != null and condition.endDate != ''">
+			AND create_date &lt;= #{condition.endDate}
+		</if>
+		GROUP BY create_date
+		ORDER BY create_date DESC
+	</select>
+	
+</mapper>

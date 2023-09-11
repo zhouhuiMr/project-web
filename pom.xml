@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com</groupId>
+	<artifactId>project-web</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0.0</version>
+	<name>project-web</name>
+	<url>http://maven.apache.org</url>
+
+	<modules>
+		<module>project-web-common</module>
+		<module>project-web-gateway</module>
+		<module>project-web-service-user</module>
+		<module>project-web-service-basic</module>
+		<module>project-web-service-workflow</module>
+		<module>project-web-service-iot</module>
+	</modules>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.6.15</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring-cloud-alibaba.version>2021.0.4.0</spring-cloud-alibaba.version>
+		<rocketmq-spring-boot-starter-version>2.1.1</rocketmq-spring-boot-starter-version>
+		<openfeign-version>3.1.8</openfeign-version>
+		<mybatis-plus-version>3.5.1</mybatis-plus-version>
+		<druid-version>1.2.9</druid-version>
+		<javax-validation-version>2.0.2</javax-validation-version>
+		<java-jwt-version>3.12.0</java-jwt-version>
+		<swagger-version>1.7.0</swagger-version>
+		<easyexcel-version>3.2.1</easyexcel-version>
+		<redisson-version>3.23.2</redisson-version>
+		<hibernate-validator-version>6.2.5.Final</hibernate-validator-version>
+		<jsoup-version>1.15.3</jsoup-version>
+		<elasticsearch-version>8.8.1</elasticsearch-version>
+		<jakarta.json-version>2.0.1</jakarta.json-version>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+			<version>3.1.1</version>
+		</dependency>
+
+		<!-- redis -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.alibaba.cloud</groupId>
+				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
+				<version>${spring-cloud-alibaba.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-openfeign</artifactId>
+				<version>${openfeign-version}</version>
+			</dependency>
+			
+			<dependency>
+		        <groupId>org.springframework.cloud</groupId>
+		        <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+		        <version>3.1.7</version>
+		    </dependency>
+
+			<dependency>
+				<groupId>org.apache.rocketmq</groupId>
+				<artifactId>rocketmq-spring-boot-starter</artifactId>
+				<version>${rocketmq-spring-boot-starter-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid-spring-boot-starter</artifactId>
+				<version>${druid-version}</version>
+			</dependency>
+
+			<!-- mybatis-plus start -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-boot-starter</artifactId>
+				<version>${mybatis-plus-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-generator</artifactId>
+				<version>${mybatis-plus-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-core</artifactId>
+				<version>${mybatis-plus-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-annotation</artifactId>
+				<version>${mybatis-plus-version}</version>
+			</dependency>
+			<!-- mybatis-plus end -->
+
+			<dependency>
+				<groupId>jakarta.validation</groupId>
+				<artifactId>jakarta.validation-api</artifactId>
+				<version>${javax-validation-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.auth0</groupId>
+				<artifactId>java-jwt</artifactId>
+				<version>${java-jwt-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-ui</artifactId>
+				<version>${swagger-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>easyexcel</artifactId>
+				<version>${easyexcel-version}</version>
+			</dependency>
+
+			<!-- redisson -->
+			<dependency>
+				<groupId>org.redisson</groupId>
+				<artifactId>redisson-spring-data-26</artifactId>
+				<version>${redisson-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.redisson</groupId>
+				<artifactId>redisson-spring-boot-starter</artifactId>
+				<version>${redisson-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.hibernate.validator</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate-validator-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>${jsoup-version}</version>
+			</dependency>
+
+			<!-- elasticsearch -->
+			<dependency>
+				<groupId>co.elastic.clients</groupId>
+				<artifactId>elasticsearch-java</artifactId>
+				<version>${elasticsearch-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.elasticsearch.client</groupId>
+				<artifactId>elasticsearch-rest-client</artifactId>
+				<version>${elasticsearch-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.json</groupId>
+				<artifactId>jakarta.json-api</artifactId>
+				<version>${jakarta.json-version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<finalName>project-web</finalName>
+	</build>
+</project>

@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>project-web-common-tool</artifactId>
+	<packaging>jar</packaging>
+	<name>project-web-common-tool</name>
+	<url>http://maven.apache.org</url>
+	
+	<parent>
+		<groupId>com</groupId>
+		<artifactId>project-web-common</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<skipTests>true</skipTests>
+	</properties>
+
+	<dependencies>
+	
+		<dependency>
+			<groupId>com</groupId>
+			<artifactId>project-web-common-entity</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		
+		<!-- swagger -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+		</dependency>
+		
+		<!-- token -->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+		</dependency>
+		
+		<!-- jsoup -->
+        <dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<finalName>project-web-common-tool</finalName>
+	</build>
+</project>

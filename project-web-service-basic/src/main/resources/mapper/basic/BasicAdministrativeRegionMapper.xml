@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.basic.mapper.BasicAdministrativeRegionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.basic.entity.BasicAdministrativeRegion">
+        <id column="main_id" property="mainId" />
+        <result column="prov_name" property="provName" />
+        <result column="prov_code" property="provCode" />
+        <result column="city_name" property="cityName" />
+        <result column="city_code" property="cityCode" />
+        <result column="coun_name" property="counName" />
+        <result column="coun_code" property="counCode" />
+        <result column="town_name" property="townName" />
+        <result column="town_code" property="townCode" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        main_id, prov_name, prov_code, city_name, city_code, coun_name, coun_code, town_name, town_code
+    </sql>
+
+	<!-- 获取所有省份 -->
+	<select id="getProvince" resultMap="BaseResultMap">
+		SELECT DISTINCT prov_name,prov_code
+		FROM basic_administrative_region
+	</select>
+	
+	<!-- 根据省份获取市信息列表 -->
+	<select id="getCityByProvince" resultMap="BaseResultMap">
+		SELECT DISTINCT prov_name,prov_code,
+		city_name,city_code
+		FROM basic_administrative_region
+		WHERE 1 = 1
+		<if test="region.provName != null and region.provName != ''">
+			AND prov_name = #{region.provName}
+		</if>
+		<if test="region.provCode != null and region.provCode != ''">
+			AND prov_code = #{region.provCode}
+		</if>
+	</select>
+	
+	<!-- 根据省、市获取县区列表 -->
+	<select id="getCountryByCity" resultMap="BaseResultMap">
+		SELECT DISTINCT prov_name,prov_code,
+		city_name,city_code,
+		coun_name,city_code
+		FROM basic_administrative_region
+		WHERE 1 = 1
+		<if test="region.provName != null and region.provName != ''">
+			AND prov_name = #{region.provName}
+		</if>
+		<if test="region.provCode != null and region.provCode != ''">
+			AND prov_code = #{region.provCode}
+		</if>
+		<if test="region.cityName != null and region.cityName != ''">
+			AND city_name = #{region.cityName}
+		</if>
+		<if test="region.cityCode != null and region.cityCode != ''">
+			AND city_code = #{region.cityCode}
+		</if>
+	</select>
+</mapper>

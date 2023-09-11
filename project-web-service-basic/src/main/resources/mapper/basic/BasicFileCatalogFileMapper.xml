@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.basic.mapper.BasicFileCatalogFileMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.basic.catalog.entity.BasicFileCatalogFileEntity">
+        <id column="file_id" property="fileId" />
+        <result column="orig_file_name" property="origFileName" />
+        <result column="file_name" property="fileName" />
+        <result column="catalog_id" property="catalogId" />
+        <result column="catalog_path" property="catalogPath" />
+        <result column="file_type" property="fileType" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        file_id, orig_file_name, file_name, catalog_id, catalog_path, file_type, del_flag, create_user_id, create_time, update_user_id, update_time
+    </sql>
+    
+    <!-- 分页获取文件列表 -->
+    <select id="getCatalogFileList" resultMap="BaseResultMap">
+    	SELECT *
+    	FROM basic_file_catalog_file
+    	WHERE del_flag = 0
+    	AND catalog_id = #{condition.catalogId}
+    	<if test="condition.fileName != null and condition.fileName != ''">
+    		AND file_name LIKE #{condition.fileName}
+    	</if>
+    	<if test="condition.origFileName != null and condition.origFileName != ''">
+    		AND orig_file_name LIKE #{condition.origFileName}
+    	</if>
+    </select>
+
+</mapper>

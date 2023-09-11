@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.user.mapper.WebRoleRequestMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.user.entity.WebRoleRequestEntity">
+        <id column="main_id" property="mainId" />
+        <result column="request_id" property="requestId" />
+        <result column="role_id" property="roleId" />
+        <result column="is_allow" property="isAllow" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+        
+       	<!-- 菜单相关信息 -->
+        <result column="menu_id" property="menuId" />
+        <!-- 接口相关信息 -->
+        <result column="request_url" property="requestUrl" />
+        <result column="permission_name" property="permissionName" />
+        <result column="bt_describe" property="btDescribe" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        main_id, request_id, role_id, is_allow, del_flag, create_user_id, create_time, update_user_id, update_time
+    </sql>
+
+	<!-- 根据角色获取对应的所有接口，并区分是否有访问权限 -->
+	<select id="getAuthRequest" resultMap="BaseResultMap">
+		SELECT a.menu_id,
+		a.request_id,a.request_url,
+		a.permission_name,a.bt_describe,
+		b.role_id,
+		IFNULL(b.is_allow,0) is_allow
+		FROM web_request a
+		LEFT JOIN web_role_request b ON a.request_id = b.request_id 
+		AND b.del_flag = 0
+		<if test="condition.roleId != null">
+			AND b.role_id = #{condition.roleId}
+		</if> 
+		WHERE a.del_flag = 0
+		<if test="condition.menuId != null">
+			AND a.menu_id = #{condition.menuId}
+		</if>
+	</select>
+	
+	<!-- 根据角色获取允许访问的接口列表 -->
+	<select id="getAllowRequest" resultMap="BaseResultMap">
+		SELECT a.role_id,a.request_id,
+		a.is_allow,b.request_url
+		FROM web_role_request a
+		LEFT JOIN web_request b ON a.request_id = b.request_id
+		WHERE a.del_flag = 0
+		AND b.del_flag = 0
+		AND a.is_allow = 1
+		<if test="roleList != null and roleList.size > 0">
+			AND a.role_id IN (
+				<foreach collection="roleList" item="item" separator=",">
+					#{item}
+				</foreach>
+			)
+		</if>
+	</select>
+</mapper>

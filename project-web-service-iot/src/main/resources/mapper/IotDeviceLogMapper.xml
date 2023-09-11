@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.mqtt.mapper.IotDeviceLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.iot.mqtt.IotDeviceLogEntity">
+        <result column="device_id" property="deviceId" />
+        <result column="lng" property="lng" />
+        <result column="lat" property="lat" />
+        <result column="device_status" property="deviceStatus" />
+        <result column="create_year" property="createYear" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        device_id, lng, lat, device_status, create_year, create_time
+    </sql>
+
+</mapper>

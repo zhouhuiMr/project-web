@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.quartz.mapper.QuartzJobExecMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.basic.quartz.entity.QuartzJobExecEntity">
+        <id column="exec_id" property="execId" />
+        <result column="job_id" property="jobId" />
+        <result column="exec_period" property="execPeriod" />
+        <result column="exec_period_value" property="execPeriodValue" />
+        <result column="exec_mode" property="execMode" />
+        <result column="http_url" property="httpUrl" />
+        <result column="http_method" property="httpMethod" />
+        <result column="http_content_type" property="httpContentType" />
+        <result column="bean_name" property="beanName" />
+        <result column="bean_method" property="beanMethod" />
+        <result column="exec_param" property="execParam" />
+        <result column="job_status" property="jobStatus" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="change_user_id" property="changeUserId" />
+        <result column="change_time" property="changeTime" />
+        
+        <result column="job_name" property="jobName" />
+        <result column="job_remark" property="jobRemark" />
+        <result column="exec_period_name" property="execPeriodName" />
+        <result column="exec_mode_name" property="execModeName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        exec_id, job_id, exec_period, exec_period_value, exec_mode, http_url, http_method, http_content_type, bean_name, bean_method, exec_param, job_status, del_flag, create_user_id, create_time, change_user_id, change_time
+    </sql>
+
+	<!-- 获取定时任务的列表 -->
+	<select id="getJobList" resultMap="BaseResultMap">
+		SELECT a.*,
+		b.job_name,
+		b.job_remark,
+		c.label exec_period_name,
+		d.label exec_mode_name
+		FROM quartz_job_exec a
+		LEFT JOIN quartz_job b ON a.job_id = b.job_id
+		LEFT JOIN basic_sys_dict c ON c.type = 'quartz_job_period' AND a.exec_period = c.value
+		LEFT JOIN basic_sys_dict d ON d.type = 'quartz_job_mode' AND a.exec_mode = d.value
+		WHERE a.del_flag = 0 
+		AND b.del_flag = 0
+		<if test="condition.jobName != null and condition.jobName != ''">
+			AND b.job_name LIKE #{condition.jobName}
+		</if>
+		<if test="condition.execPeriod != null">
+			AND a.exec_period = #{condition.execPeriod}
+		</if>
+		<if test="condition.execMode != null">
+			AND a.exec_mode = #{condition.execMode}
+		</if>
+		<if test="condition.jobStatus != null">
+			AND a.job_status = #{condition.jobStatus}
+		</if>
+		<if test="condition.execIdList != null and condition.execIdList.size > 0">
+			AND a.exec_id IN (
+				<foreach collection="condition.execIdList" item="item" separator=",">
+					#{item}
+				</foreach>
+			)
+		</if>
+	</select>
+</mapper>

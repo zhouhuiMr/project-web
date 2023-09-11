@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.user.mapper.WebMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.web.common.user.entity.WebMenuEntity">
+        <id column="menu_id" property="menuId" />
+        <result column="menu_name" property="menuName" />
+        <result column="menu_order" property="menuOrder" />
+        <result column="icon" property="icon" />
+        <result column="menu_url" property="menuUrl" />
+        <result column="parent_id" property="parentId" />
+        <result column="menu_scope" property="menuScope" />
+        <result column="menu_type" property="menuType" />
+        <result column="menu_level" property="menuLevel" />
+        <result column="is_show" property="isShow" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+        
+        <!-- 其他属性 -->
+        <result column="menu_level_str" property="menuLevelStr" />
+        <result column="menu_scope_str" property="menuScopeStr" />
+        <result column="menu_type_str" property="menuTypeStr" />
+        <result column="is_allow" property="isAllow"/>
+        <result column="parent_name" property="parentName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        menu_id, menu_name, menu_order, icon, menu_url, parent_id, menu_scope, menu_type, menu_level, is_show, del_flag, create_user_id, create_time, update_user_id, update_time
+    </sql>
+
+	<!-- 获取菜单列表 -->
+	<select id="getMenuList" resultMap="BaseResultMap">
+		SELECT a.*,
+		b.label menu_level_str,c.label menu_scope_str,
+		d.label menu_type_str,
+		e.menu_name parent_name
+		FROM web_menu a 
+		LEFT JOIN basic_sys_dict b ON a.menu_level = b.value AND b.type = 'menu_level' AND b.del_flag = 0
+		LEFT JOIN basic_sys_dict c ON a.menu_scope = c.value AND c.type = 'menu_scope' AND c.del_flag = 0
+		LEFT JOIN basic_sys_dict d ON a.menu_type = d.value AND d.type = 'menu_type' AND d.del_flag = 0
+		LEFT JOIN web_menu e ON a.parent_id = e.menu_id
+		WHERE a.del_flag = 0
+		<if test="webMenu.menuName != null and webMenu.menuName != ''">
+			AND a.menu_name like #{webMenu.menuName}
+		</if>
+		<if test="webMenu.menuLevel != null">
+			AND a.menu_level = #{webMenu.menuLevel}
+		</if>
+		<if test="webMenu.menuScope != null">
+			AND a.menu_scope = #{webMenu.menuScope}
+		</if>
+		<if test="webMenu.menuType != null">
+			AND a.menu_type = #{webMenu.menuType}
+		</if>
+		<if test="webMenu.parentId != null">
+			AND a.parent_id = #{webMenu.parentId}
+		</if>
+		ORDER BY a.parent_id ASC,a.menu_order ASC
+	</select>
+	
+	<!-- 获取登录用户的显示的菜单 -->
+	<select id="getUserMenu" resultType="com.web.common.user.entity.UserMenu">
+		SELECT DISTINCT d.menu_id menuId,menu_name menuName,
+		d.menu_order menuOrder,d.icon,d.menu_url menuUrl,
+		d.parent_id parentId,d.menu_scope menuScope,
+		d.menu_type menuType,d.menu_level menuLevel
+		FROM web_user_role a 
+		LEFT JOIN web_role_menu c ON c.role_id = a.role_id AND c.del_flag = 0
+		LEFT JOIN web_menu d ON c.menu_id = d.menu_id AND d.del_flag = 0
+		WHERE a.user_id = #{userId} 
+		AND a.del_flag = 0
+		AND d.is_show = 0
+		AND d.menu_id IS NOT NULL
+		ORDER BY parent_id ASC,menu_order ASC
+	</select>
+	
+	<!-- 根据角色获取菜单权限 -->
+	<select id="getAuthMenuList" resultMap="BaseResultMap">
+		SELECT a.menu_id,a.menu_name,
+		a.icon,a.menu_url,a.parent_id,
+		b.menu_id is_allow
+		FROM web_menu a
+		LEFT JOIN (
+			SELECT m.menu_id FROM web_role_menu r
+		    LEFT JOIN web_menu m ON r.menu_id = m.menu_id
+		    WHERE m.del_flag = 0
+			AND r.del_flag = 0
+		    AND role_id = #{roleMenu.roleId}
+		) b ON a.menu_id = b.menu_id
+		WHERE a.del_flag = 0
+		ORDER BY a.parent_id ASC,a.menu_order ASC
+	</select>
+	
+</mapper>
